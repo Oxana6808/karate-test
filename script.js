@@ -1,11 +1,11 @@
 let currentLang = "ru";
-let currentTheme = null; // Для хранения текущей темы
+let currentTheme = null;
 let currentWordIndex = 0;
-let mistakes = [];
 let correctAnswers = 0;
 let shuffledWords = [];
 let selectedOption = null;
 let isIncorrectSelected = false;
+let mistakes = new Set(); // Используем Set для уникальных ошибок
 
 const themeSelection = document.getElementById("theme-selection");
 const testContainer = document.querySelector(".test-container");
@@ -31,11 +31,11 @@ document.querySelectorAll(".lang-btn").forEach(btn => {
         document.querySelector(".lang-btn.active").classList.remove("active");
         btn.classList.add("active");
         currentLang = btn.dataset.lang;
-        updateLanguageButtons(); // Обновляем цвета кнопок языка
-        updateButtonText(); // Обновляем текст кнопок
-        updateTitle(); // Обновляем текст заголовка
-        updateThemeButtonsText(); // Обновляем текст кнопок тем
-        updateTableHeaders(); // Обновляем заголовки таблицы
+        updateLanguageButtons();
+        updateButtonText();
+        updateTitle();
+        updateThemeButtonsText();
+        updateTableHeaders();
         if (testContainer.style.display === "block") loadQuestion();
         if (resultsDiv.style.display === "block") showResults();
     });
@@ -102,7 +102,7 @@ document.querySelectorAll(".theme-btn").forEach(btn => {
             [...words].filter(word => word.theme === currentTheme).sort(() => Math.random() - 0.5);
         currentWordIndex = 0;
         correctAnswers = 0;
-        mistakes = [];
+        mistakes.clear(); // Очищаем Set ошибок
         selectedOption = null;
         isIncorrectSelected = false;
         testContainer.style.display = "block";
@@ -118,6 +118,11 @@ document.querySelectorAll(".theme-btn").forEach(btn => {
 
 // Загрузка вопроса
 function loadQuestion() {
+    if (currentWordIndex >= shuffledWords.length) {
+        showResults();
+        return;
+    }
+
     const word = shuffledWords[currentWordIndex];
     questionWord.textContent = word.japanese;
     transcription.textContent = word.transcription[currentLang];
@@ -170,25 +175,20 @@ function selectOption(selected, correctWord) {
             if (isCorrect) {
                 btn.classList.remove("btn-outline-secondary");
                 btn.classList.add("btn-success");
+                nextBtn.style.display = "block"; // Показываем "Далее" только при верном ответе
+                dontKnowBtn.style.display = "none"; // Скрываем "Не знаю" при верном ответе
             } else {
                 btn.classList.remove("btn-outline-secondary");
                 btn.classList.add("btn-danger");
                 isIncorrectSelected = true;
+                dontKnowBtn.style.display = "block"; // "Не знаю" остается видимым при ошибке
+                nextBtn.style.display = "none"; // "Далее" не показываем при ошибке
+                mistakes.add(correctWord.japanese); // Записываем ошибку один раз
             }
         }
     });
-    dontKnowBtn.style.display = "none";
-    nextBtn.style.display = "block";
-    stopBtn.style.display = "block";
-
     if (isCorrect) {
         correctAnswers++;
-    } else if (isIncorrectSelected) {
-        mistakes.push({
-            word: correctWord.japanese,
-            transcription: correctWord.transcription[currentLang],
-            correct: correctWord.translation[currentLang]
-        });
     }
     updateLanguageButtons();
     updateButtonText();
@@ -206,7 +206,7 @@ function resetOptionColors() {
 
 // Кнопка "Далее"
 nextBtn.addEventListener("click", () => {
-    if (selectedOption || isIncorrectSelected) {
+    if (selectedOption && (selectedOption === shuffledWords[currentWordIndex].translation[currentLang] || isIncorrectSelected)) {
         currentWordIndex++;
         if (currentWordIndex < shuffledWords.length) {
             loadQuestion();
@@ -222,11 +222,7 @@ nextBtn.addEventListener("click", () => {
 // Кнопка "Не знаю"
 dontKnowBtn.addEventListener("click", () => {
     const word = shuffledWords[currentWordIndex];
-    mistakes.push({
-        word: word.japanese,
-        transcription: word.transcription[currentLang],
-        correct: word.translation[currentLang]
-    });
+    mistakes.add(word.japanese); // Записываем ошибку один раз
     resetOptionColors();
     const buttons = optionsDiv.querySelectorAll("button");
     buttons.forEach(btn => {
@@ -235,8 +231,8 @@ dontKnowBtn.addEventListener("click", () => {
             btn.classList.add("btn-success");
         }
     });
-    dontKnowBtn.style.display = "none";
-    nextBtn.style.display = "block";
+    dontKnowBtn.style.display = "none"; // Скрываем "Не знаю"
+    nextBtn.style.display = "block"; // Показываем "Далее" вместо "Не знаю"
     stopBtn.style.display = "block";
     isIncorrectSelected = true;
     selectedOption = word.translation[currentLang];
@@ -248,8 +244,9 @@ dontKnowBtn.addEventListener("click", () => {
 // Кнопка "Стоп"
 stopBtn.addEventListener("click", () => {
     testContainer.style.display = "none";
-    resultsDiv.style.display = "none";
-    themeSelection.style.display = "block";
+    resultsDiv.style.display = "block";
+    themeSelection.style.display = "none";
+    showResults(); // Показываем результаты с таблицей ошибок
     selectedOption = null;
     isIncorrectSelected = false;
     updateLanguageButtons();
@@ -262,14 +259,15 @@ function showResults() {
     testContainer.style.display = "none";
     resultsDiv.style.display = "block";
     scoreDisplay.textContent = {
-        ru: `Правильно: ${correctAnswers}, Ошибок: ${mistakes.length}`,
-        ge: `სწორი: ${correctAnswers}, შეცდომები: ${mistakes.length}`,
-        en: `Correct: ${correctAnswers}, Mistakes: ${mistakes.length}`
+        ru: `Правильно: ${correctAnswers}, Ошибок: ${mistakes.size}`,
+        ge: `სწორი: ${correctAnswers}, შეცდომები: ${mistakes.size}`,
+        en: `Correct: ${correctAnswers}, Mistakes: ${mistakes.size}`
     }[currentLang];
     mistakesTableBody.innerHTML = "";
-    mistakes.forEach(m => {
+    const mistakeWords = words.filter(word => mistakes.has(word.japanese));
+    mistakeWords.forEach(m => {
         const row = document.createElement("tr");
-        row.innerHTML = `<td class="text-center">${m.word}</td><td class="text-center">${m.transcription}</td><td class="text-center">${m.correct}</td>`;
+        row.innerHTML = `<td class="text-center">${m.japanese}</td><td class="text-center">${m.transcription[currentLang]}</td><td class="text-center">${m.translation[currentLang]}</td>`;
         mistakesTableBody.appendChild(row);
     });
     updateLanguageButtons();
@@ -283,6 +281,10 @@ restartBtn.addEventListener("click", () => {
     resultsDiv.style.display = "none";
     themeSelection.style.display = "block";
     testContainer.style.display = "none";
+    currentTheme = null;
+    currentWordIndex = 0;
+    correctAnswers = 0;
+    mistakes.clear();
     selectedOption = null;
     isIncorrectSelected = false;
     updateLanguageButtons();
