@@ -1,6 +1,6 @@
 body {
-    background: linear-gradient(to bottom, #f0f5f9, #e0e8f0); /* Лёгкий градиент фона */
-    font-family: Arial, sans-serif;
+    background: linear-gradient(to bottom, #F5F5F5, #EDC186); /* Оставляем фон, который тебе понравился */
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Arial, sans-serif; /* iOS-шрифты */
     margin: 0;
     padding: 20px;
     position: relative;
@@ -9,64 +9,218 @@ body {
 .container {
     max-width: 800px;
     margin: 0 auto;
-    background-color: rgba(255, 255, 255, 0.9);
+    background-color: rgba(255, 255, 255, 0.95);
     padding: 20px;
     border-radius: 15px;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
 }
 
 h1 {
-    color: #1e3a8a; /* Тёмно-синий заголовок */
+    color: #0C395B; /* Глубокий синий для заголовков */
     font-size: 2.5em;
+    text-align: center;
     margin-bottom: 20px;
+    font-weight: 600;
 }
 
 #themes-title {
-    color: #1e3a8a; /* Тёмно-синий заголовок списка тем */
+    color: #0C395B; /* Глубокий синий для заголовка тем */
+    text-align: center;
     margin-bottom: 20px;
+    font-weight: 600;
 }
 
-#image-container img {
-    max-width: 200px;
-    margin: 0 auto;
-    display: block;
-}
-
-/* Стили для кнопок тем */
-.theme-btn {
-    background: linear-gradient(45deg, #1e3a8a, #3b82f6); /* Градиент тёмно-синий → светло-синий */
-    color: white;
+/* Кнопки языков */
+.language-btn {
+    background: linear-gradient(45deg, #229D54, #30764D); /* Зеленый градиент */
+    color: #FFFFFF !important; /* Белый шрифт */
     border: none;
-    border-radius: 10px;
-    padding: 10px 20px;
-    margin: 5px 0;
-    transition: transform 0.2s, box-shadow 0.2s;
+    border-radius: 8px;
+    padding: 8px 15px;
+    margin-right: 10px;
+    transition: background 0.3s, transform 0.2s, box-shadow 0.2s;
+    font-size: 0.9em;
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-    width: 100%;
 }
 
-.theme-btn:hover {
+.language-btn.active {
+    background: linear-gradient(45deg, #75CE99, #5EBE86); /* Бледно-серый градиент */
+}
+
+.language-btn:hover {
+    background: linear-gradient(45deg, #75CE99, #5EBE86); /* Бледно-серый при наведении */
     transform: translateY(-2px);
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
 }
 
+/* Изображение */
+#image-container img {
+    max-width: 150px;
+    height: auto;
+    display: block;
+    margin: 0 auto 20px;
+    border-radius: 8px;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+}
+
+@media (max-width: 768px) {
+    #image-container img {
+        max-width: 120px;
+    }
+}
+
+/* Кнопки тем */
+.theme-btn {
+    background: linear-gradient(45deg, #2F5069, #34495E); /* Градиент синий */
+    color: #FFFFFF !important; /* Белый шрифт */
+    border: none;
+    border-radius: 10px;
+    padding: 12px 20px;
+    margin: 8px 0;
+    transition: transform 0.2s, box-shadow 0.2s, background 0.3s;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+    width: 45%;
+    display: inline-block;
+    text-align: center;
+    font-size: 1em;
+    font-weight: 500;
+}
+
+.theme-btn:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.2);
+    background: linear-gradient(45deg, #2F5069, #3D5A7A); /* Легкий сдвиг градиента */
+}
+
 .theme-btn:focus {
     outline: none;
-    box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.5);
+    box-shadow: 0 0 0 3px rgba(47, 80, 105, 0.3);
 }
 
 /* Адаптивность */
 @media (max-width: 768px) {
     h1 {
-        font-size: 1.5em;
-    }
-    #image-container img {
-        max-width: 100%;
-    }
-    .btn {
-        width: 100%;
+        font-size: 1.8em;
     }
     .theme-btn {
         width: 100%;
+        margin-bottom: 12px;
     }
+}
+
+/* Форма */
+.form-group {
+    margin-bottom: 15px;
+}
+
+.form-control {
+    width: 100%;
+    padding: 10px;
+    border: 1px solid #2F5069; /* Синий */
+    border-radius: 8px;
+    font-size: 1em;
+    box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.1);
+    transition: border-color 0.3s, box-shadow 0.3s;
+}
+
+.form-control:focus {
+    border-color: #0B6630; /* Темно-зеленый */
+    box-shadow: 0 0 5px rgba(11, 102, 48, 0.3);
+    outline: none;
+}
+
+/* Кнопки действий */
+.btn-primary {
+    background-color: #0C395B; /* Глубокий синий для "Не знаю" */
+    border: none;
+    border-radius: 8px;
+    padding: 10px 20px;
+    color: #FFFFFF;
+    font-size: 1em;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+    transition: transform 0.2s, box-shadow 0.2s;
+}
+
+.btn-primary:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+}
+
+.btn-danger {
+    background-color: #8E280F; /* Темно-красный для "Стоп" */
+    border: none;
+    border-radius: 8px;
+    padding: 10px 20px;
+    color: #FFFFFF;
+    font-size: 1em;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+    transition: transform 0.2s, box-shadow 0.2s;
+}
+
+.btn-danger:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+}
+
+.btn-next {
+    background-color: #0B6630; /* Темно-зеленый для "Далее" */
+    border: none;
+    border-radius: 8px;
+    padding: 10px 20px;
+    color: #FFFFFF;
+    font-size: 1em;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+    transition: transform 0.2s, box-shadow 0.2s;
+}
+
+.btn-next:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+}
+
+.back-to-start {
+    background-color: #5996C6; /* Светло-синий для "Вернуться в начало" */
+    border: none;
+    border-radius: 8px;
+    padding: 10px 20px;
+    color: #FFFFFF;
+    font-size: 1em;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+    transition: transform 0.2s, box-shadow 0.2s;
+}
+
+.back-to-start:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+}
+
+/* Таблица результатов */
+table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 20px 0;
+}
+
+th, td {
+    padding: 10px;
+    text-align: left;
+    border-bottom: 1px solid #2F5069;
+}
+
+th {
+    background-color: #2F5069;
+    color: #FFFFFF;
+}
+
+td.correct {
+    color: #0B6630; /* Правильный ответ */
+}
+
+td.incorrect {
+    color: #8E280F; /* Ошибка */
+}
+
+/* Общие стили для кнопок */
+.btn {
+    margin: 5px;
 }

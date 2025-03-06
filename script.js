@@ -44,9 +44,9 @@ document.querySelectorAll(".lang-btn").forEach(btn => {
 // Обновление текста заголовка
 function updateTitle() {
     const titles = {
-        ru: "Изучение слов по карате",
-        ge: "კარატის სიტყვების შესწავლა",
-        en: "Learning Karate Words"
+        ru: "Изучение слов по карате🥋",
+        ge: "კარატის სიტყვების შესწავლა🥋",
+        en: "Learning Karate Words🥋"
     };
     title.textContent = titles[currentLang];
     themesTitle.textContent = {
