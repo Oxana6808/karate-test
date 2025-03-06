@@ -5,49 +5,85 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Тест по словам карате</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
-    <style>
-
-    </style>
+    <link rel="stylesheet" href="styles.css">
 </head>
 <body>
 <div class="container mt-4 d-flex flex-column align-items-center position-relative">
-    <!-- <div class="karate-animation"></div> Анимация каратиста закомментирована -->
     <h1 id="title" class="text-center mb-4">Изучение слов по карате</h1>
     <div class="d-flex justify-content-center mb-3">
         <div class="btn-group" role="group">
             <button class="btn btn-success lang-btn active" data-lang="ru">Русский</button>
             <button class="btn btn-secondary lang-btn" data-lang="ge">ქართული</button>
+            <button class="btn btn-secondary lang-btn" data-lang="en">English</button>
         </div>
     </div>
-    <button id="start-test" class="btn btn-success btn-lg w-50 mb-3">Начать тестирование</button>
 
+    <!-- Блок с выбором темы -->
+    <div id="theme-selection" class="w-100" style="max-width: 600px;">
+        <h2 id="themes-title" class="text-center mb-4" style="color: #1e3a8a;">Список тем</h2>
+        <div id="theme-buttons" class="row g-2">
+            <div class="col-md-6">
+                <button class="btn theme-btn w-100" data-theme="Общие понятия" data-text-ru="1. Общие понятия" data-text-ge="1. ზოგადი ცნებები" data-text-en="1. General Concepts">1. Общие понятия</button>
+            </div>
+            <div class="col-md-6">
+                <button class="btn theme-btn w-100" data-theme="Команды" data-text-ru="2. Команды" data-text-ge="2. ბრძანებები" data-text-en="2. Commands">2. Команды</button>
+            </div>
+            <div class="col-md-6">
+                <button class="btn theme-btn w-100" data-theme="Счёт" data-text-ru="3. Счёт" data-text-ge="3. ანგარიში" data-text-en="3. Counting">3. Счёт</button>
+            </div>
+            <div class="col-md-6">
+                <button class="btn theme-btn w-100" data-theme="Уровни и направления" data-text-ru="4. Уровни и направления" data-text-ge="4. დონეები და მიმართულებები" data-text-en="4. Levels and Directions">4. Уровни и направления</button>
+            </div>
+            <div class="col-md-6">
+                <button class="btn theme-btn w-100" data-theme="Ударные части тела" data-text-ru="5. Ударные части тела" data-text-ge="5. დარტყმის ნაწილები" data-text-en="5. Striking Body Parts">5. Ударные части тела</button>
+            </div>
+            <div class="col-md-6">
+                <button class="btn theme-btn w-100" data-theme="Стойки" data-text-ru="6. Стойки" data-text-ge="6. სადგამები" data-text-en="6. Stances">6. Стойки</button>
+            </div>
+            <div class="col-md-6">
+                <button class="btn theme-btn w-100" data-theme="Удары руками" data-text-ru="7. Удары руками" data-text-ge="7. ხელის დარტყმები" data-text-en="7. Hand Strikes">7. Удары руками</button>
+            </div>
+            <div class="col-md-6">
+                <button class="btn theme-btn w-100" data-theme="Удары ногами" data-text-ru="8. Удары ногами" data-text-ge="8. ფეხის დარტყმები" data-text-en="8. Leg Strikes">8. Удары ногами</button>
+            </div>
+            <div class="col-md-6">
+                <button class="btn theme-btn w-100" data-theme="Блоки" data-text-ru="9. Блоки" data-text-ge="9. ბლოკები" data-text-en="9. Blocks">9. Блоки</button>
+            </div>
+            <div class="col-md-6">
+                <button class="btn theme-btn w-100" data-theme="Полный экзамен" data-text-ru="10. Полный экзамен" data-text-ge="10. სრული გამოცდა" data-text-en="10. Full Exam">10. Полный экзамен</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Блок теста -->
     <div class="test-container" style="display: none; width: 100%; max-width: 600px;">
         <h2 id="question-word" class="text-center mb-3"></h2>
         <p id="transcription" class="text-center mb-3"></p>
         <div id="image-container" class="text-center mb-3"></div>
-        <p id="progress" class="text-center mb-3"></p>
         <div id="options" class="mb-3"></div>
+        <p id="progress" class="text-center mb-3"></p>
         <div class="d-flex justify-content-center gap-2 flex-wrap">
-            <button id="stop-test" class="btn btn-danger" data-text-ru="Стоп" data-text-ge="შeაჩerე">Стоп</button>
-            <button id="dont-know" class="btn btn-primary" style="display: block;" data-text-ru="Не знаю" data-text-ge="არ ვიცი">Не знаю</button>
-            <button id="next-question" class="btn btn-success" style="display: none;" data-text-ru="Далее" data-text-ge="შемдeгი">Далее</button>
+            <button id="stop-test" class="btn btn-danger" data-text-ru="Стоп" data-text-ge="შეაჩერე" data-text-en="Stop">Стоп</button>
+            <button id="dont-know" class="btn btn-primary" style="display: block;" data-text-ru="Не знаю" data-text-ge="არ ვიცი" data-text-en="Don't Know">Не знаю</button>
+            <button id="next-question" class="btn btn-success" style="display: none;" data-text-ru="Далее" data-text-ge="შემდეგი" data-text-en="Next">Далее</button>
         </div>
     </div>
 
+    <!-- Блок результатов -->
     <div class="results" style="display: none; width: 100%; max-width: 600px;">
-        <h2 class="text-center mb-3">Результаты</h2>
+        <h2 id="results-title" class="text-center mb-3" data-text-ru="Результаты" data-text-ge="შედეგები" data-text-en="Results">Результаты</h2>
         <p id="score" class="text-center mb-3"></p>
         <table id="mistakes-table" class="table table-bordered table-striped w-100">
             <thead>
             <tr>
-                <th class="text-center">Слово</th>
-                <th class="text-center">Транскрипция</th>
-                <th class="text-center">Правильный перевод</th>
+                <th class="text-center" data-text-ru="Слово" data-text-ge="სიტყვა" data-text-en="Word">Слово</th>
+                <th class="text-center" data-text-ru="Транскрипция" data-text-ge="ტრანსკრიფცია" data-text-en="Transcription">Транскрипция</th>
+                <th class="text-center" data-text-ru="Правильный перевод" data-text-ge="სწორი თარგმანი" data-text-en="Correct Translation">Правильный перевод</th>
             </tr>
             </thead>
             <tbody></tbody>
         </table>
-        <button id="back-to-start" class="btn btn-info mt-3 w-50">Вернуться на начало</button>
+        <button id="back-to-start" class="btn btn-info mt-3 w-50" data-text-ru="Вернуться на начало" data-text-ge="დაბრუნება დასაწყისში" data-text-en="Back to Start">Вернуться на начало</button>
     </div>
 </div>
 <script src="data.js"></script>

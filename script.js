@@ -1,12 +1,13 @@
 let currentLang = "ru";
+let currentTheme = null; // Для хранения текущей темы
 let currentWordIndex = 0;
 let mistakes = [];
 let correctAnswers = 0;
 let shuffledWords = [];
 let selectedOption = null;
-let isIncorrectSelected = false; // Новый флаг для отслеживания неверного выбора
+let isIncorrectSelected = false;
 
-const startTestBtn = document.getElementById("start-test");
+const themeSelection = document.getElementById("theme-selection");
 const testContainer = document.querySelector(".test-container");
 const questionWord = document.getElementById("question-word");
 const transcription = document.getElementById("transcription");
@@ -20,7 +21,9 @@ const restartBtn = document.getElementById("back-to-start");
 const resultsDiv = document.querySelector(".results");
 const scoreDisplay = document.getElementById("score");
 const mistakesTableBody = document.querySelector("#mistakes-table tbody");
-const title = document.getElementById("title"); // Новый элемент для заголовка
+const title = document.getElementById("title");
+const themesTitle = document.getElementById("themes-title");
+const resultsTitle = document.getElementById("results-title");
 
 // Переключение языка
 document.querySelectorAll(".lang-btn").forEach(btn => {
@@ -29,15 +32,37 @@ document.querySelectorAll(".lang-btn").forEach(btn => {
         btn.classList.add("active");
         currentLang = btn.dataset.lang;
         updateLanguageButtons(); // Обновляем цвета кнопок языка
-        updateButtonText(); // Обновляем текст кнопок при смене языка
+        updateButtonText(); // Обновляем текст кнопок
         updateTitle(); // Обновляем текст заголовка
+        updateThemeButtonsText(); // Обновляем текст кнопок тем
+        updateTableHeaders(); // Обновляем заголовки таблицы
         if (testContainer.style.display === "block") loadQuestion();
+        if (resultsDiv.style.display === "block") showResults();
     });
 });
 
 // Обновление текста заголовка
 function updateTitle() {
-    title.textContent = currentLang === "ru" ? "Изучение слов по карате" : "კარატის სიტყვების შესწავლა";
+    const titles = {
+        ru: "Изучение слов по карате",
+        ge: "კარატის სიტყვების შესწავლა",
+        en: "Learning Karate Words"
+    };
+    title.textContent = titles[currentLang];
+    themesTitle.textContent = {
+        ru: "Список тем",
+        ge: "თემების სია",
+        en: "List of Topics"
+    }[currentLang];
+    resultsTitle.textContent = resultsTitle.getAttribute(`data-text-${currentLang}`);
+}
+
+// Обновление заголовков таблицы
+function updateTableHeaders() {
+    const headers = document.querySelectorAll("#mistakes-table th");
+    headers.forEach(header => {
+        header.textContent = header.getAttribute(`data-text-${currentLang}`);
+    });
 }
 
 // Обновление цветов кнопок языка
@@ -53,30 +78,42 @@ function updateLanguageButtons() {
     });
 }
 
+// Обновление текста кнопок тем
+function updateThemeButtonsText() {
+    document.querySelectorAll(".theme-btn").forEach(btn => {
+        btn.textContent = btn.getAttribute(`data-text-${currentLang}`);
+    });
+}
+
 // Обновление текста кнопок
 function updateButtonText() {
     stopBtn.textContent = stopBtn.getAttribute(`data-text-${currentLang}`);
     dontKnowBtn.textContent = dontKnowBtn.getAttribute(`data-text-${currentLang}`);
     nextBtn.textContent = nextBtn.getAttribute(`data-text-${currentLang}`);
+    restartBtn.textContent = restartBtn.getAttribute(`data-text-${currentLang}`);
 }
 
-// Начало теста
-startTestBtn.addEventListener("click", () => {
-    shuffledWords = [...words].sort(() => Math.random() - 0.5);
-    currentWordIndex = 0;
-    correctAnswers = 0;
-    mistakes = [];
-    selectedOption = null;
-    isIncorrectSelected = false;
-    testContainer.style.display = "block";
-    startTestBtn.style.display = "none";
-    resultsDiv.style.display = "none";
-    loadQuestion();
-    nextBtn.style.display = "none";
-    dontKnowBtn.style.display = "block";
-    updateLanguageButtons(); // Убедимся, что цвета кнопок языка соответствуют текущему языку
-    updateButtonText(); // Убедимся, что текст кнопок соответствует языку
-    updateTitle(); // Устанавливаем начальный текст заголовка
+// Выбор темы
+document.querySelectorAll(".theme-btn").forEach(btn => {
+    btn.addEventListener("click", () => {
+        currentTheme = btn.dataset.theme;
+        shuffledWords = currentTheme === "Полный экзамен" ?
+            [...words].sort(() => Math.random() - 0.5) :
+            [...words].filter(word => word.theme === currentTheme).sort(() => Math.random() - 0.5);
+        currentWordIndex = 0;
+        correctAnswers = 0;
+        mistakes = [];
+        selectedOption = null;
+        isIncorrectSelected = false;
+        testContainer.style.display = "block";
+        themeSelection.style.display = "none";
+        resultsDiv.style.display = "none";
+        loadQuestion();
+        nextBtn.style.display = "none";
+        dontKnowBtn.style.display = "block";
+        updateButtonText();
+        updateTitle();
+    });
 });
 
 // Загрузка вопроса
@@ -102,11 +139,11 @@ function loadQuestion() {
     dontKnowBtn.style.display = "block";
     stopBtn.style.display = "block";
     selectedOption = null;
-    isIncorrectSelected = false; // Сброс флага при загрузке нового вопроса
-    resetOptionColors(); // Сбрасываем цвета только при новом вопросе
-    updateLanguageButtons(); // Обновляем цвета кнопок языка для текущего вопроса
-    updateButtonText(); // Обновляем текст кнопок для текущего языка
-    updateTitle(); // Обновляем текст заголовка для текущего языка
+    isIncorrectSelected = false;
+    resetOptionColors();
+    updateLanguageButtons();
+    updateButtonText();
+    updateTitle();
 }
 
 // Генерация вариантов ответа
@@ -115,7 +152,9 @@ function generateOptions(correctWord) {
     while (options.length < 5) {
         const randomWord = words[Math.floor(Math.random() * words.length)];
         const translation = randomWord.translation[currentLang];
-        if (!options.includes(translation)) options.push(translation);
+        if (!options.includes(translation) && randomWord.theme === correctWord.theme) {
+            options.push(translation);
+        }
     }
     return options.sort(() => Math.random() - 0.5);
 }
@@ -124,7 +163,7 @@ function generateOptions(correctWord) {
 function selectOption(selected, correctWord) {
     selectedOption = selected;
     const isCorrect = selected === correctWord.translation[currentLang];
-    resetOptionColors(); // Сбрасываем цвета перед обновлением
+    resetOptionColors();
     const buttons = optionsDiv.querySelectorAll("button");
     buttons.forEach(btn => {
         if (btn.textContent === selected) {
@@ -134,7 +173,7 @@ function selectOption(selected, correctWord) {
             } else {
                 btn.classList.remove("btn-outline-secondary");
                 btn.classList.add("btn-danger");
-                isIncorrectSelected = true; // Устанавливаем флаг, если выбор неверный
+                isIncorrectSelected = true;
             }
         }
     });
@@ -142,7 +181,6 @@ function selectOption(selected, correctWord) {
     nextBtn.style.display = "block";
     stopBtn.style.display = "block";
 
-    // Если выбор сделан, сразу проверяем и сохраняем результат
     if (isCorrect) {
         correctAnswers++;
     } else if (isIncorrectSelected) {
@@ -152,12 +190,12 @@ function selectOption(selected, correctWord) {
             correct: correctWord.translation[currentLang]
         });
     }
-    updateLanguageButtons(); // Обновляем цвета кнопок языка после выбора
-    updateButtonText(); // Обновляем текст кнопок после выбора
-    updateTitle(); // Обновляем текст заголовка после выбора
+    updateLanguageButtons();
+    updateButtonText();
+    updateTitle();
 }
 
-// Сброс цветов кнопок (только при новом вопросе или сбросе)
+// Сброс цветов кнопок
 function resetOptionColors() {
     const buttons = optionsDiv.querySelectorAll("button");
     buttons.forEach(btn => {
@@ -168,17 +206,17 @@ function resetOptionColors() {
 
 // Кнопка "Далее"
 nextBtn.addEventListener("click", () => {
-    if (selectedOption || isIncorrectSelected) { // Добавляем проверку isIncorrectSelected
+    if (selectedOption || isIncorrectSelected) {
         currentWordIndex++;
         if (currentWordIndex < shuffledWords.length) {
-            loadQuestion(); // Это сбросит цвета и флаг
+            loadQuestion();
         } else {
             showResults();
         }
     }
-    updateLanguageButtons(); // Обновляем цвета кнопок языка после перехода
-    updateButtonText(); // Обновляем текст кнопок после перехода
-    updateTitle(); // Обновляем текст заголовка после перехода
+    updateLanguageButtons();
+    updateButtonText();
+    updateTitle();
 });
 
 // Кнопка "Не знаю"
@@ -198,52 +236,56 @@ dontKnowBtn.addEventListener("click", () => {
         }
     });
     dontKnowBtn.style.display = "none";
-    nextBtn.style.display = "block"; // Убеждаемся, что кнопка "Далее" видна
+    nextBtn.style.display = "block";
     stopBtn.style.display = "block";
-    isIncorrectSelected = true; // Устанавливаем флаг, чтобы кнопка "Далее" работала
-    selectedOption = word.translation[currentLang]; // Устанавливаем выбранный вариант как правильный
-    updateLanguageButtons(); // Обновляем цвета кнопок языка после выбора
-    updateButtonText(); // Обновляем текст кнопок после выбора
-    updateTitle(); // Обновляем текст заголовка после выбора
+    isIncorrectSelected = true;
+    selectedOption = word.translation[currentLang];
+    updateLanguageButtons();
+    updateButtonText();
+    updateTitle();
 });
 
 // Кнопка "Стоп"
 stopBtn.addEventListener("click", () => {
     testContainer.style.display = "none";
     resultsDiv.style.display = "none";
-    startTestBtn.style.display = "block";
+    themeSelection.style.display = "block";
     selectedOption = null;
     isIncorrectSelected = false;
-    updateLanguageButtons(); // Обновляем цвета кнопок языка после остановки
-    updateButtonText(); // Обновляем текст кнопок после остановки
-    updateTitle(); // Обновляем текст заголовка после остановки
+    updateLanguageButtons();
+    updateButtonText();
+    updateTitle();
 });
 
 // Показ результатов
 function showResults() {
     testContainer.style.display = "none";
     resultsDiv.style.display = "block";
-    scoreDisplay.textContent = `Правильно: ${correctAnswers}, Ошибок: ${mistakes.length}`;
-    if (currentLang === "ge") scoreDisplay.textContent = `სწორი: ${correctAnswers}, შეცდომები: ${mistakes.length}`;
+    scoreDisplay.textContent = {
+        ru: `Правильно: ${correctAnswers}, Ошибок: ${mistakes.length}`,
+        ge: `სწორი: ${correctAnswers}, შეცდომები: ${mistakes.length}`,
+        en: `Correct: ${correctAnswers}, Mistakes: ${mistakes.length}`
+    }[currentLang];
     mistakesTableBody.innerHTML = "";
     mistakes.forEach(m => {
         const row = document.createElement("tr");
         row.innerHTML = `<td class="text-center">${m.word}</td><td class="text-center">${m.transcription}</td><td class="text-center">${m.correct}</td>`;
         mistakesTableBody.appendChild(row);
     });
-    updateLanguageButtons(); // Обновляем цвета кнопок языка для результатов
-    updateButtonText(); // Обновляем текст кнопок для результатов
-    updateTitle(); // Обновляем текст заголовка для результатов
+    updateLanguageButtons();
+    updateButtonText();
+    updateTitle();
+    updateTableHeaders();
 }
 
 // Вернуться на начало
 restartBtn.addEventListener("click", () => {
     resultsDiv.style.display = "none";
-    startTestBtn.style.display = "block";
+    themeSelection.style.display = "block";
     testContainer.style.display = "none";
     selectedOption = null;
     isIncorrectSelected = false;
-    updateLanguageButtons(); // Обновляем цвета кнопок языка после возврата
-    updateButtonText(); // Обновляем текст кнопок после возврата
-    updateTitle(); // Обновляем текст заголовка после возврата
+    updateLanguageButtons();
+    updateButtonText();
+    updateTitle();
 });

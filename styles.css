@@ -1,23 +1,28 @@
 body {
+    background: linear-gradient(to bottom, #f0f5f9, #e0e8f0); /* Лёгкий градиент фона */
     font-family: Arial, sans-serif;
     margin: 0;
     padding: 20px;
-    background-color: #f0f0f0;
     position: relative;
 }
 
 .container {
     max-width: 800px;
     margin: 0 auto;
-    background-color: #fff;
+    background-color: rgba(255, 255, 255, 0.9);
     padding: 20px;
-    border-radius: 10px;
-    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    border-radius: 15px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
 }
 
 h1 {
-    color: #333;
-    font-size: 2em;
+    color: #1e3a8a; /* Тёмно-синий заголовок */
+    font-size: 2.5em;
+    margin-bottom: 20px;
+}
+
+#themes-title {
+    color: #1e3a8a; /* Тёмно-синий заголовок списка тем */
     margin-bottom: 20px;
 }
 
@@ -27,28 +32,31 @@ h1 {
     display: block;
 }
 
-.karate-animation {
-    width: 100px;
-    height: 100px;
-    background: url('images/karate_gif.gif') no-repeat center;
-    background-size: contain;
-    position: absolute;
-    top: 20px;
-    right: 20px;
-    animation: karateMove 2s infinite alternate, karateRotate 4s infinite linear;
+/* Стили для кнопок тем */
+.theme-btn {
+    background: linear-gradient(45deg, #1e3a8a, #3b82f6); /* Градиент тёмно-синий → светло-синий */
+    color: white;
+    border: none;
+    border-radius: 10px;
+    padding: 10px 20px;
+    margin: 5px 0;
+    transition: transform 0.2s, box-shadow 0.2s;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    width: 100%;
 }
 
-@keyframes karateMove {
-    0% { transform: translateX(0); }
-    100% { transform: translateX(20px); }
+.theme-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
 }
 
-@keyframes karateRotate {
-    0% { transform: rotate(0deg); }
-    100% { transform: rotate(360deg); }
+.theme-btn:focus {
+    outline: none;
+    box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.5);
 }
 
-@media (max-width: 600px) {
+/* Адаптивность */
+@media (max-width: 768px) {
     h1 {
         font-size: 1.5em;
     }
@@ -58,10 +66,7 @@ h1 {
     .btn {
         width: 100%;
     }
-    .karate-animation {
-        width: 80px;
-        height: 80px;
-        top: 10px;
-        right: 10px;
+    .theme-btn {
+        width: 100%;
     }
 }
