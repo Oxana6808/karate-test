@@ -1,103 +1,95 @@
 body {
-    background: linear-gradient(to bottom, #F5F5F5, #EDC186); /* Оставляем фон, который тебе понравился */
-    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Arial, sans-serif; /* iOS-шрифты */
+    background: linear-gradient(to bottom, #F5F5F5, #EDC186);
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Arial, sans-serif;
     margin: 0;
     padding: 20px;
-    position: relative;
+    min-height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: flex-start;
 }
 
 .container {
     max-width: 800px;
     margin: 0 auto;
     background-color: rgba(255, 255, 255, 0.95);
-    padding: 20px;
-    border-radius: 15px;
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    padding: 30px;
+    border-radius: 20px;
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.1);
+    position: relative;
+    overflow: hidden;
 }
 
 h1 {
-    color: #0C395B; /* Глубокий синий для заголовков */
+    color: #0C395B;
     font-size: 2.5em;
     text-align: center;
-    margin-bottom: 20px;
-    font-weight: 600;
+    margin-bottom: 25px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 1px;
 }
 
 #themes-title {
-    color: #0C395B; /* Глубокий синий для заголовка тем */
+    color: #0C395B;
     text-align: center;
-    margin-bottom: 20px;
-    font-weight: 600;
+    margin-bottom: 25px;
+    font-weight: 700;
+    font-size: 1.8em;
 }
 
 /* Кнопки языков */
-.language-btn {
-    background: linear-gradient(45deg, #229D54, #30764D); /* Зеленый градиент */
-    color: #FFFFFF !important; /* Белый шрифт */
+.lang-btn {
+    background: linear-gradient(45deg, #a1a1a1, #474747);
+    color: #FFFFFF !important;
     border: none;
-    border-radius: 8px;
-    padding: 8px 15px;
-    margin-right: 10px;
-    transition: background 0.3s, transform 0.2s, box-shadow 0.2s;
-    font-size: 0.9em;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    border-radius: 10px;
+    padding: 10px 20px;
+    margin: 0 10px;
+    transition: all 0.3s ease;
+    font-size: 1em;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
 }
 
-.language-btn.active {
-    background: linear-gradient(45deg, #75CE99, #5EBE86); /* Бледно-серый градиент */
+.lang-btn.active {
+    background: linear-gradient(45deg, #6e8f7b, #5EBE86);
+    transform: scale(1.05);
 }
 
-.language-btn:hover {
-    background: linear-gradient(45deg, #75CE99, #5EBE86); /* Бледно-серый при наведении */
-    transform: translateY(-2px);
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+.lang-btn:hover {
+    background: linear-gradient(45deg, #75CE99, #5EBE86);
+    transform: translateY(-3px);
+    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.2);
 }
-
-/*!* Изображение *!*/
-/*#image-container img {*/
-/*    max-width: 150px;*/
-/*    height: auto;*/
-/*    display: block;*/
-/*    margin: 0 auto 20px;*/
-/*    border-radius: 8px;*/
-/*    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);*/
-/*}*/
 
 /* Изображение */
 #image-container img {
-    max-height: 300px; /* Ограничиваем высоту изображения (было max-width: 150px) */
-    width: auto; /* Ширина подстраивается пропорционально */
-    height: auto; /* Высота подстраивается пропорционально */
+    max-height: 300px;
+    width: auto;
+    height: auto;
     display: block;
     margin: 0 auto 20px;
-    border-radius: 8px;
-    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+    border-radius: 12px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    object-fit: contain;
 }
 
-/*@media (max-width: 768px) {*/
-/*    #image-container img {*/
-/*        max-width: 120px;*/
-/*    }*/
-/*}*/
-
-/* Адаптивность для меньших экранов */
 @media (max-width: 768px) {
     #image-container img {
-        max-height: 200px; /* На мобильных устройствах чуть меньше высота */
-        width: auto;
+        max-height: 200px;
     }
 }
 
 /* Кнопки тем */
 .theme-btn {
-    background: linear-gradient(45deg, #2F5069, #34495E); /* Градиент синий */
-    color: #FFFFFF !important; /* Белый шрифт */
+    background: linear-gradient(45deg, #2F5069, #34495E);
+    color: #FFFFFF !important;
     border: none;
-    border-radius: 10px;
+    border-radius: 12px;
     padding: 12px 20px;
     margin: 8px 0;
-    transition: transform 0.2s, box-shadow 0.2s, background 0.3s;
-    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+    transition: all 0.3s ease;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
     width: 45%;
     display: inline-block;
     text-align: center;
@@ -106,17 +98,16 @@ h1 {
 }
 
 .theme-btn:hover {
-    transform: translateY(-3px);
-    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.2);
-    background: linear-gradient(45deg, #2F5069, #3D5A7A); /* Легкий сдвиг градиента */
+    transform: translateY(-4px);
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+    background: linear-gradient(45deg, #2F5069, #3D5A7A);
 }
 
 .theme-btn:focus {
     outline: none;
-    box-shadow: 0 0 0 3px rgba(47, 80, 105, 0.3);
+    box-shadow: 0 0 0 4px rgba(47, 80, 105, 0.3);
 }
 
-/* Адаптивность */
 @media (max-width: 768px) {
     h1 {
         font-size: 1.8em;
@@ -127,121 +118,82 @@ h1 {
     }
 }
 
-/* Форма */
+/* Форма и опции */
 .form-group {
-    margin-bottom: 15px;
+    margin-bottom: 20px;
 }
 
 .form-control {
     width: 100%;
-    padding: 10px;
-    border: 1px solid #2F5069; /* Синий */
-    border-radius: 8px;
+    padding: 12px;
+    border: 2px solid #2F5069;
+    border-radius: 10px;
     font-size: 1em;
-    box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.1);
-    transition: border-color 0.3s, box-shadow 0.3s;
+    box-shadow: inset 0 2px 6px rgba(0, 0, 0, 0.1);
+    transition: all 0.3s ease;
 }
 
 .form-control:focus {
-    border-color: #0B6630; /* Темно-зеленый */
-    box-shadow: 0 0 5px rgba(11, 102, 48, 0.3);
+    border-color: #0B6630;
+    box-shadow: 0 0 8px rgba(11, 102, 48, 0.3);
     outline: none;
 }
 
 /* Кнопки действий */
-.btn-primary {
-    background-color: #0C395B; /* Глубокий синий для "Не знаю" */
-    border: none;
-    border-radius: 8px;
-    padding: 10px 20px;
-    color: #FFFFFF;
+.btn {
+    margin: 5px;
+    padding: 12px 25px;
     font-size: 1em;
-    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
-    transition: transform 0.2s, box-shadow 0.2s;
+    border-radius: 10px;
+    transition: all 0.3s ease;
+}
+
+.btn-primary {
+    background-color: #0C395B;
+    border: none;
+    color: #FFFFFF;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
 }
 
 .btn-primary:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+    transform: translateY(-3px);
+    box-shadow: 0 6px 16px rgba(0, 0, 0, 0.2);
 }
 
 .btn-danger {
-    background-color: #8E280F; /* Темно-красный для "Стоп" */
+    background-color: #8E280F;
     border: none;
-    border-radius: 8px;
-    padding: 10px 20px;
     color: #FFFFFF;
-    font-size: 1em;
-    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
-    transition: transform 0.2s, box-shadow 0.2s;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
 }
 
 .btn-danger:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+    transform: translateY(-3px);
+    box-shadow: 0 6px 16px rgba(0, 0, 0, 0.2);
 }
 
-.btn-next {
-    background-color: #0B6630; /* Темно-зеленый для "Далее" */
+.btn-success {
+    background-color: #0B6630;
     border: none;
-    border-radius: 8px;
-    padding: 10px 20px;
     color: #FFFFFF;
-    font-size: 1em;
-    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
-    transition: transform 0.2s, box-shadow 0.2s;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
 }
 
-.btn-next:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+.btn-success:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 6px 16px rgba(0, 0, 0, 0.2);
 }
 
-.back-to-start {
-    background-color: #5996C6; /* Светло-синий для "Вернуться в начало" */
+.btn-info {
+    background-color: #5996C6;
     border: none;
-    border-radius: 8px;
-    padding: 10px 20px;
     color: #FFFFFF;
-    font-size: 1em;
-    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
-    transition: transform 0.2s, box-shadow 0.2s;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
 }
 
-.back-to-start:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
-}
-
-/* Таблица результатов */
-table {
-    width: 100%;
-    border-collapse: collapse;
-    margin: 20px 0;
-}
-
-th, td {
-    padding: 10px;
-    text-align: left;
-    border-bottom: 1px solid #2F5069;
-}
-
-th {
-    background-color: #2F5069;
-    color: #FFFFFF;
-}
-
-td.correct {
-    color: #0B6630; /* Правильный ответ */
-}
-
-td.incorrect {
-    color: #8E280F; /* Ошибка */
-}
-
-/* Общие стили для кнопок */
-.btn {
-    margin: 5px;
+.btn-info:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 6px 16px rgba(0, 0, 0, 0.2);
 }
 
 /* Таблица результатов */
@@ -249,42 +201,52 @@ td.incorrect {
     width: 100%;
     border-collapse: collapse;
     margin: 20px 0;
-    overflow-x: auto; /* Горизонтальная прокрутка для широких таблиц */
-    display: block; /* Для корректной работы прокрутки */
+    overflow-x: auto;
+    display: block;
+    background-color: #FFFFFF;
+    border-radius: 12px;
+    overflow: hidden;
 }
 
 #mistakes-table th,
 #mistakes-table td {
-    padding: 10px;
-    text-align: center; /* Текст по центру, как в твоём HTML */
-    border-bottom: 1px solid #2F5069;
-    white-space: nowrap; /* Предотвращаем перенос текста */
+    padding: 12px;
+    text-align: center;
+    border-bottom: 2px solid #2F5069;
+    /* Разрешаем перенос текста и разбиение слов */
+    white-space: normal;
+    word-break: break-word;
+}
+#mistakes-table td {
+    min-width: 150px;
 }
 
 #mistakes-table th {
-    background-color: #2F5069;
+    background: linear-gradient(45deg, #2F5069, #34495E);
     color: #FFFFFF;
+    font-weight: 600;
 }
 
 #mistakes-table td.correct {
-    color: #0B6630; /* Правильный ответ */
+    color: #0B6630;
+    font-weight: 500;
 }
 
 #mistakes-table td.incorrect {
-    color: #8E280F; /* Ошибка */
+    color: #8E280F;
+    font-weight: 500;
 }
 
 /* Адаптивность для мобильных устройств */
 @media (max-width: 768px) {
     #mistakes-table {
-        min-width: 300px; /* Минимальная ширина таблицы */
-        font-size: 0.9em; /* Уменьшаем шрифт */
+        min-width: 300px;
+        font-size: 0.9em;
     }
 
     #mistakes-table th,
     #mistakes-table td {
-        padding: 8px; /* Уменьшаем отступы */
-        white-space: normal; /* Разрешаем перенос текста */
+        padding: 10px;
     }
 }
 
@@ -307,8 +269,10 @@ td.incorrect {
 
     #mistakes-table tr {
         margin-bottom: 15px;
-        border: 1px solid #2F5069;
-        border-radius: 5px;
+        border: 2px solid #2F5069;
+        border-radius: 10px;
+        background-color: #FAF9F6;
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
     }
 
     #mistakes-table td {
@@ -316,6 +280,7 @@ td.incorrect {
         position: relative;
         padding-left: 50%;
         text-align: right;
+        padding-right: 10px;
     }
 
     #mistakes-table td:before {
@@ -326,9 +291,6 @@ td.incorrect {
         padding-right: 10px;
         text-align: left;
         font-weight: bold;
+        color: #0C395B;
     }
-
-    #mistakes-table td:nth-of-type(1):before { content: "Слово"; }
-    #mistakes-table td:nth-of-type(2):before { content: "Транскрипция"; }
-    #mistakes-table td:nth-of-type(3):before { content: "Правильный перевод"; }
 }
