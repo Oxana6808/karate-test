@@ -53,19 +53,38 @@ h1 {
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
 }
 
+/*!* Изображение *!*/
+/*#image-container img {*/
+/*    max-width: 150px;*/
+/*    height: auto;*/
+/*    display: block;*/
+/*    margin: 0 auto 20px;*/
+/*    border-radius: 8px;*/
+/*    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);*/
+/*}*/
+
 /* Изображение */
 #image-container img {
-    max-width: 150px;
-    height: auto;
+    max-height: 300px; /* Ограничиваем высоту изображения (было max-width: 150px) */
+    width: auto; /* Ширина подстраивается пропорционально */
+    height: auto; /* Высота подстраивается пропорционально */
     display: block;
     margin: 0 auto 20px;
     border-radius: 8px;
     box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
 }
 
+/*@media (max-width: 768px) {*/
+/*    #image-container img {*/
+/*        max-width: 120px;*/
+/*    }*/
+/*}*/
+
+/* Адаптивность для меньших экранов */
 @media (max-width: 768px) {
     #image-container img {
-        max-width: 120px;
+        max-height: 200px; /* На мобильных устройствах чуть меньше высота */
+        width: auto;
     }
 }
 
