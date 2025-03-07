@@ -64,7 +64,7 @@ const words = [
     { japanese: "受け", transcription: { ru: "Уке", ge: "უკე", en: "Uke" }, translation: { ru: "Защищающийся.", ge: "დამცველი.", en: "Defender." }, theme: "Команды", image: "images/2.21_Уке.jpg" },
     { japanese: "立ってください", transcription: { ru: "Таттэ кудасай", ge: "ტატტე კუდასაი", en: "Tatte Kudasai" }, translation: { ru: "Встаньте пожалуйста.", ge: "გთხოვთ, ადექით.", en: "Please stand up." }, theme: "Команды", image: "images/2.22_Таттэ_кудасай.jpg" },
 
-    // 3. Счёт
+    // 3. Счёт - 20
     { japanese: "一", transcription: { ru: "Ичи (Ити)", ge: "იჩი (იტი)", en: "Ichi" }, translation: { ru: "Один.", ge: "ერთი.", en: "One." }, theme: "Счёт", image: "images/3.1_Ичи.jpg" },
     { japanese: "二", transcription: { ru: "Ни", ge: "ნი", en: "Ni" }, translation: { ru: "Два.", ge: "ორი.", en: "Two." }, theme: "Счёт", image: "images/3.2_Ни.jpg" },
     { japanese: "三", transcription: { ru: "Сан", ge: "სანი", en: "San" }, translation: { ru: "Три.", ge: "სამი.", en: "Three." }, theme: "Счёт", image: "images/3.3_Сан.jpg" },
@@ -84,6 +84,7 @@ const words = [
     { japanese: "八十", transcription: { ru: "Хачиджу", ge: "ჰაჩიჯუ", en: "Hachijū" }, translation: { ru: "Восемьдесят.", ge: "ოთხმოცი.", en: "Eighty." }, theme: "Счёт", image: "images/3.17_Хачиджу.jpg" },
     { japanese: "九十", transcription: { ru: "Кюджу", ge: "კიუჯუ", en: "Kyūjū" }, translation: { ru: "Девяносто.", ge: "ოთხმოცდაათი.", en: "Ninety." }, theme: "Счёт", image: "images/3.18_Кюджу.jpg" },
     { japanese: "百", transcription: { ru: "Хяку", ge: "ჰიაკუ", en: "Hyaku" }, translation: { ru: "Сто.", ge: "ასი.", en: "Hundred." }, theme: "Счёт", image: "images/3.19_Хяку.jpg" },
+    { japanese: "四十五", transcription: { ru: "Ендзюго (Ёндзюго)", ge: "იენძიუგო (იონძიუგო)", en: "Yonjūgo" }, translation: { ru: "Сорок пять.", ge: "ორმოცდახუთი.", en: "Forty-five." }, theme: "Счёт", image: "images/3.20_Ендзюго.jpg" },
 
     // 4. Уровни и направления
     { japanese: "上段", transcription: { ru: "Джодан (Дзёдан)", ge: "ჯოდანი (ძიოდანი)", en: "Jōdan" }, translation: { ru: "Верхний.", ge: "ზედა.", en: "Upper." }, theme: "Уровни и направления", image: "images/4.1_Джодан.jpg" },
@@ -106,6 +107,7 @@ const words = [
     { japanese: "回転", transcription: { ru: "Кайтэн", ge: "კაიტენი", en: "Kaiten" }, translation: { ru: "Поворот через спину.", ge: "ზურგით ბრუნვა.", en: "Turn through the back." }, theme: "Уровни и направления", image: "images/4.18_Кайтэн.jpg" },
     { japanese: "裏", transcription: { ru: "Ура", ge: "ურა", en: "Ura" }, translation: { ru: "Техника, выполняемая с разворотом на 360°; Обратная сторона, в практике ката или идо гейко означает шаги не прямо, а с предварительным разворотом через спину.", ge: "ტექნიკა, რომელიც შესრულებულია 360°-იანი ბრუნვით; უკანა მხარე, კატას ან იდო გეიკოს პრაქტიკაში ნიშნავს ნაბიჯებს არა პირდაპირ, არამედ წინასწარი ზურგით ბრუნვით.", en: "Technique performed with a 360° turn; Reverse side, in kata or ido geiko practice, it means steps not straight but with a preliminary turn through the back." }, theme: "Уровни и направления", image: "images/4.19_Ура.jpg" },
     { japanese: "正面", transcription: { ru: "Шомэн (Маэ)", ge: "შომენი (მაე)", en: "Shōmen (Mae)" }, translation: { ru: "Движение (направление) вперёд.", ge: "მოძრაობა (მიმართულება) წინ.", en: "Movement (direction) forward." }, theme: "Уровни и направления", image: "images/4.20_Шомэн.jpg" },
+    { japanese: "四十五", transcription: { ru: "Ендзюго (Ёндзюго)", ge: "იენძიუგო (იონძიუგო)", en: "Yonjūgo" }, translation: { ru: "Сорок пять.", ge: "ორმოცდახუთი.", en: "Forty-five." }, theme: "Уровни и направления", image: "images/4.2_Ендзюго.jpg" },
     { japanese: "下がり", transcription: { ru: "Сагари (Уширо)", ge: "საგარი (უშირო)", en: "Sagari (Ushiro)" }, translation: { ru: "Движение (направление) назад.", ge: "მოძრაობა (მიმართულება) უკან.", en: "Movement (direction) backward." }, theme: "Уровни и направления", image: "images/4.21_Сагари.jpg" },
 
     // 4. Уровни атаки и защиты
@@ -131,7 +133,7 @@ const words = [
     { japanese: "左", transcription: { ru: "Хидари", ge: "ჰიდარი", en: "Hidari" }, translation: { ru: "Левая.", ge: "მარცხენა.", en: "Left." }, theme: "Уровни и направления", image: "images/7.1_Хидари.jpg" },
     { japanese: "右", transcription: { ru: "Миги", ge: "მიგი", en: "Migi" }, translation: { ru: "Правая.", ge: "მარჯვენა.", en: "Right." }, theme: "Уровни и направления", image: "images/7.2_Миги.jpg" },
 
-    // 5. Ударные части тела
+    // 5. Ударные части тела - 27
     { japanese: "正拳", transcription: { ru: "Сэйкэн", ge: "სეიკენი", en: "Seiken" }, translation: { ru: "Кулак (передняя часть: два сустава указательного и среднего пальца).", ge: "მუშტი (წინა ნაწილი: საჩვენებელი და შუა თითის ორი სახსარი).", en: "Fist (front part: two joints of the index and middle fingers)." }, theme: "Ударные части тела", image: "images/8.1_Сэйкэн.jpg" },
     { japanese: "裏拳", transcription: { ru: "Уракэн", ge: "ურაკენი", en: "Uraken" }, translation: { ru: "Тыльная часть кулака; Перевёрнутый кулак, тыльная часть.", ge: "მუშტის უკანა მხარე; გადაბრუნებული მუშტი, უკანა მხარე.", en: "Back of the fist; Inverted fist, back part." }, theme: "Ударные части тела", image: "images/8.2_Уракэн.jpg" },
     { japanese: "鉄槌", transcription: { ru: "Тэтцуй (Тетсуи)", ge: "ტეტუი (ტეცუი)", en: "Tetsui" }, translation: { ru: "Нижняя часть кулака; Кулак — «молот».", ge: "მუშტის ქვედა ნაწილი; მუშტი — „ჩაქუჩი“.", en: "Lower part of the fist; Fist — 'hammer'." }, theme: "Ударные части тела", image: "images/8.3_Тэтцуй.jpg" },
