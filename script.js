@@ -10,7 +10,7 @@ let mistakes = new Set(); // Используем Set для уникальны�
 const themeSelection = document.getElementById("theme-selection");
 const testContainer = document.querySelector(".test-container");
 const questionWord = document.getElementById("question-word");
-const transcription = document.getElementById("transcription");
+const description = document.getElementById("description");
 const imageContainer = document.getElementById("image-container");
 const optionsDiv = document.getElementById("options");
 const progress = document.getElementById("progress");
@@ -124,12 +124,11 @@ function loadQuestion() {
     }
 
     const word = shuffledWords[currentWordIndex];
-    questionWord.textContent = word.japanese;
-    transcription.textContent = word.transcription[currentLang];
-    progress.textContent = `${currentWordIndex + 1} / ${shuffledWords.length}`;
-
     // Отображение картинки (если есть)
     imageContainer.innerHTML = word.image ? `<img src="${word.image}" alt="${word.japanese}" class="img-fluid">` : "";
+    progress.textContent = `${currentWordIndex + 1} / ${shuffledWords.length}`;
+    questionWord.textContent = word.japanese; // Японское слово (иероглиф)
+    description.textContent = word.translation[currentLang]; // Описание на выбранном языке
 
     const options = generateOptions(word);
     optionsDiv.innerHTML = "";
@@ -151,14 +150,14 @@ function loadQuestion() {
     updateTitle();
 }
 
-// Генерация вариантов ответа
+// Генерация вариантов ответа (варианты — это транскрипции на выбранном языке)
 function generateOptions(correctWord) {
-    const options = [correctWord.translation[currentLang]];
+    const options = [correctWord.transcription[currentLang]];
     while (options.length < 5) {
         const randomWord = words[Math.floor(Math.random() * words.length)];
-        const translation = randomWord.translation[currentLang];
-        if (!options.includes(translation) && randomWord.theme === correctWord.theme) {
-            options.push(translation);
+        const transcription = randomWord.transcription[currentLang];
+        if (!options.includes(transcription) && randomWord.theme === correctWord.theme) {
+            options.push(transcription);
         }
     }
     return options.sort(() => Math.random() - 0.5);
@@ -167,7 +166,7 @@ function generateOptions(correctWord) {
 // Выбор варианта
 function selectOption(selected, correctWord) {
     selectedOption = selected;
-    const isCorrect = selected === correctWord.translation[currentLang];
+    const isCorrect = selected === correctWord.transcription[currentLang];
     resetOptionColors();
     const buttons = optionsDiv.querySelectorAll("button");
     buttons.forEach(btn => {
@@ -206,7 +205,7 @@ function resetOptionColors() {
 
 // Кнопка "Далее"
 nextBtn.addEventListener("click", () => {
-    if (selectedOption && (selectedOption === shuffledWords[currentWordIndex].translation[currentLang] || isIncorrectSelected)) {
+    if (selectedOption && (selectedOption === shuffledWords[currentWordIndex].transcription[currentLang] || isIncorrectSelected)) {
         currentWordIndex++;
         if (currentWordIndex < shuffledWords.length) {
             loadQuestion();
@@ -226,7 +225,7 @@ dontKnowBtn.addEventListener("click", () => {
     resetOptionColors();
     const buttons = optionsDiv.querySelectorAll("button");
     buttons.forEach(btn => {
-        if (btn.textContent === word.translation[currentLang]) {
+        if (btn.textContent === word.transcription[currentLang]) {
             btn.classList.remove("btn-outline-secondary");
             btn.classList.add("btn-success");
         }
@@ -235,7 +234,7 @@ dontKnowBtn.addEventListener("click", () => {
     nextBtn.style.display = "block"; // Показываем "Далее" вместо "Не знаю"
     stopBtn.style.display = "block";
     isIncorrectSelected = true;
-    selectedOption = word.translation[currentLang];
+    selectedOption = word.transcription[currentLang];
     updateLanguageButtons();
     updateButtonText();
     updateTitle();
@@ -267,7 +266,11 @@ function showResults() {
     const mistakeWords = words.filter(word => mistakes.has(word.japanese));
     mistakeWords.forEach(m => {
         const row = document.createElement("tr");
-        row.innerHTML = `<td class="text-center">${m.japanese}</td><td class="text-center">${m.transcription[currentLang]}</td><td class="text-center">${m.translation[currentLang]}</td>`;
+        row.innerHTML = `
+            <td class="text-center">${m.japanese}</td>
+            <td class="text-center">${m.transcription[currentLang]}</td>
+            <td class="text-center">${m.translation[currentLang]}</td>
+        `;
         mistakesTableBody.appendChild(row);
     });
     updateLanguageButtons();
