@@ -6,11 +6,15 @@ let shuffledWords = [];
 let selectedOption = null;
 let isIncorrectSelected = false;
 let mistakes = new Set(); // Используем Set для уникальных ошибок
+let testMode = "word-to-translation"; // По умолчанию "Слово → Перевод"
+let currentOptions = []; // Храним текущие варианты ответа
+let initialLang = "ru"; // Язык, на котором были сгенерированы варианты ответа
 
 const themeSelection = document.getElementById("theme-selection");
 const testContainer = document.querySelector(".test-container");
+const translationText = document.getElementById("translation-text");
 const questionWord = document.getElementById("question-word");
-const description = document.getElementById("description");
+const transcription = document.getElementById("transcription");
 const imageContainer = document.getElementById("image-container");
 const optionsDiv = document.getElementById("options");
 const progress = document.getElementById("progress");
@@ -24,6 +28,22 @@ const mistakesTableBody = document.querySelector("#mistakes-table tbody");
 const title = document.getElementById("title");
 const themesTitle = document.getElementById("themes-title");
 const resultsTitle = document.getElementById("results-title");
+const modeToggle = document.getElementById("mode-toggle");
+const wordToTranslationLabel = document.getElementById("word-to-translation");
+const translationToWordLabel = document.getElementById("translation-to-word");
+
+// Переключение режима теста
+modeToggle.addEventListener("change", () => {
+    testMode = modeToggle.checked ? "translation-to-word" : "word-to-translation";
+    updateModeLabels();
+    if (testContainer.style.display === "block") loadQuestion(); // Обновляем вопрос при переключении режима
+});
+
+// Обновление текста переключателя режимов
+function updateModeLabels() {
+    wordToTranslationLabel.textContent = wordToTranslationLabel.getAttribute(`data-text-${currentLang}`);
+    translationToWordLabel.textContent = translationToWordLabel.getAttribute(`data-text-${currentLang}`);
+}
 
 // Переключение языка
 document.querySelectorAll(".lang-btn").forEach(btn => {
@@ -36,7 +56,8 @@ document.querySelectorAll(".lang-btn").forEach(btn => {
         updateTitle();
         updateThemeButtonsText();
         updateTableHeaders();
-        if (testContainer.style.display === "block") loadQuestion();
+        updateModeLabels();
+        if (testContainer.style.display === "block") loadQuestion(false); // Не генерируем новые варианты ответа
         if (resultsDiv.style.display === "block") showResults();
     });
 });
@@ -105,6 +126,8 @@ document.querySelectorAll(".theme-btn").forEach(btn => {
         mistakes.clear(); // Очищаем Set ошибок
         selectedOption = null;
         isIncorrectSelected = false;
+        currentOptions = []; // Очищаем варианты ответа
+        initialLang = currentLang; // Сохраняем язык, на котором генерируются варианты
         testContainer.style.display = "block";
         themeSelection.style.display = "none";
         resultsDiv.style.display = "none";
@@ -117,7 +140,7 @@ document.querySelectorAll(".theme-btn").forEach(btn => {
 });
 
 // Загрузка вопроса
-function loadQuestion() {
+function loadQuestion(generateNewOptions = true) {
     if (currentWordIndex >= shuffledWords.length) {
         showResults();
         return;
@@ -127,18 +150,54 @@ function loadQuestion() {
     // Отображение картинки (если есть)
     imageContainer.innerHTML = word.image ? `<img src="${word.image}" alt="${word.japanese}" class="img-fluid">` : "";
     progress.textContent = `${currentWordIndex + 1} / ${shuffledWords.length}`;
-    questionWord.textContent = word.japanese; // Японское слово (иероглиф)
-    description.textContent = word.translation[currentLang]; // Описание на выбранном языке
 
-    const options = generateOptions(word);
+    if (testMode === "word-to-translation") {
+        // Режим "Слово → Перевод": иероглиф → транскрипция
+        translationText.textContent = ""; // Скрываем перевод
+        translationText.style.display = "none";
+        questionWord.textContent = word.japanese; // Иероглиф
+        questionWord.style.display = "block";
+        transcription.textContent = word.transcription[currentLang]; // Транскрипция
+        transcription.style.display = "block";
+    } else {
+        // Режим "Перевод → Слово": иероглиф → перевод
+        translationText.textContent = word.translation[currentLang]; // Перевод
+        translationText.style.display = "block";
+        questionWord.textContent = word.japanese; // Иероглиф
+        questionWord.style.display = "block";
+        transcription.textContent = ""; // Скрываем транскрипцию
+        transcription.style.display = "none";
+    }
+
+    // Генерируем варианты ответа только если это новый вопрос или режим изменился
+    if (generateNewOptions) {
+        currentOptions = generateOptions(word);
+        initialLang = currentLang; // Сохраняем язык, на котором были сгенерированы варианты
+    }
+
+    // Обновляем текст кнопок в зависимости от текущего языка
     optionsDiv.innerHTML = "";
-    options.forEach(opt => {
+    currentOptions.forEach(opt => {
         const btn = document.createElement("button");
-        btn.textContent = opt;
+        // Находим слово, соответствующее варианту ответа, и отображаем его на текущем языке
+        const optionWord = words.find(w =>
+            testMode === "word-to-translation" ?
+                w.translation[initialLang] === opt :
+                w.transcription[initialLang] === opt
+        );
+        if (optionWord) {
+            btn.textContent = testMode === "word-to-translation" ?
+                optionWord.translation[currentLang] :
+                optionWord.transcription[currentLang];
+        } else {
+            btn.textContent = opt; // На случай, если слово не найдено (хотя это не должно происходить)
+        }
         btn.classList.add("btn", "btn-outline-secondary", "w-100", "mb-2", "d-block", "mx-auto");
+        btn.dataset.originalText = opt; // Сохраняем оригинальный текст для проверки
         btn.addEventListener("click", () => selectOption(opt, word));
         optionsDiv.appendChild(btn);
     });
+
     nextBtn.style.display = "none";
     dontKnowBtn.style.display = "block";
     stopBtn.style.display = "block";
@@ -150,14 +209,28 @@ function loadQuestion() {
     updateTitle();
 }
 
-// Генерация вариантов ответа (варианты — это транскрипции на выбранном языке)
+// Генерация вариантов ответа
 function generateOptions(correctWord) {
-    const options = [correctWord.transcription[currentLang]];
-    while (options.length < 5) {
-        const randomWord = words[Math.floor(Math.random() * words.length)];
-        const transcription = randomWord.transcription[currentLang];
-        if (!options.includes(transcription) && randomWord.theme === correctWord.theme) {
-            options.push(transcription);
+    const options = [];
+    if (testMode === "word-to-translation") {
+        // В режиме "Слово → Перевод" варианты ответа — переводы
+        options.push(correctWord.translation[currentLang]);
+        while (options.length < 5) {
+            const randomWord = words[Math.floor(Math.random() * words.length)];
+            const translationOption = randomWord.translation[currentLang];
+            if (!options.includes(translationOption) && randomWord.theme === correctWord.theme) {
+                options.push(translationOption);
+            }
+        }
+    } else {
+        // В режиме "Перевод → Слово" варианты ответа — транскрипции
+        options.push(correctWord.transcription[currentLang]);
+        while (options.length < 5) {
+            const randomWord = words[Math.floor(Math.random() * words.length)];
+            const transcriptionOption = randomWord.transcription[currentLang];
+            if (!options.includes(transcriptionOption) && randomWord.theme === correctWord.theme) {
+                options.push(transcriptionOption);
+            }
         }
     }
     return options.sort(() => Math.random() - 0.5);
@@ -166,11 +239,13 @@ function generateOptions(correctWord) {
 // Выбор варианта
 function selectOption(selected, correctWord) {
     selectedOption = selected;
-    const isCorrect = selected === correctWord.transcription[currentLang];
+    const isCorrect = testMode === "word-to-translation" ?
+        selected === correctWord.translation[initialLang] :
+        selected === correctWord.transcription[initialLang];
     resetOptionColors();
     const buttons = optionsDiv.querySelectorAll("button");
     buttons.forEach(btn => {
-        if (btn.textContent === selected) {
+        if (btn.dataset.originalText === selected) {
             if (isCorrect) {
                 btn.classList.remove("btn-outline-secondary");
                 btn.classList.add("btn-success");
@@ -182,7 +257,8 @@ function selectOption(selected, correctWord) {
                 isIncorrectSelected = true;
                 dontKnowBtn.style.display = "block"; // "Не знаю" остается видимым при ошибке
                 nextBtn.style.display = "none"; // "Далее" не показываем при ошибке
-                mistakes.add(correctWord.japanese); // Записываем ошибку один раз
+                // Добавляем ошибку
+                mistakes.add(correctWord.japanese);
             }
         }
     });
@@ -205,7 +281,7 @@ function resetOptionColors() {
 
 // Кнопка "Далее"
 nextBtn.addEventListener("click", () => {
-    if (selectedOption && (selectedOption === shuffledWords[currentWordIndex].transcription[currentLang] || isIncorrectSelected)) {
+    if (selectedOption && (selectedOption === (testMode === "word-to-translation" ? shuffledWords[currentWordIndex].translation[initialLang] : shuffledWords[currentWordIndex].transcription[initialLang]) || isIncorrectSelected)) {
         currentWordIndex++;
         if (currentWordIndex < shuffledWords.length) {
             loadQuestion();
@@ -221,11 +297,12 @@ nextBtn.addEventListener("click", () => {
 // Кнопка "Не знаю"
 dontKnowBtn.addEventListener("click", () => {
     const word = shuffledWords[currentWordIndex];
-    mistakes.add(word.japanese); // Записываем ошибку один раз
+    // Добавляем ошибку
+    mistakes.add(word.japanese);
     resetOptionColors();
     const buttons = optionsDiv.querySelectorAll("button");
     buttons.forEach(btn => {
-        if (btn.textContent === word.transcription[currentLang]) {
+        if (btn.dataset.originalText === (testMode === "word-to-translation" ? word.translation[initialLang] : word.transcription[initialLang])) {
             btn.classList.remove("btn-outline-secondary");
             btn.classList.add("btn-success");
         }
@@ -234,7 +311,7 @@ dontKnowBtn.addEventListener("click", () => {
     nextBtn.style.display = "block"; // Показываем "Далее" вместо "Не знаю"
     stopBtn.style.display = "block";
     isIncorrectSelected = true;
-    selectedOption = word.transcription[currentLang];
+    selectedOption = testMode === "word-to-translation" ? word.translation[initialLang] : word.transcription[initialLang];
     updateLanguageButtons();
     updateButtonText();
     updateTitle();
@@ -257,10 +334,14 @@ stopBtn.addEventListener("click", () => {
 function showResults() {
     testContainer.style.display = "none";
     resultsDiv.style.display = "block";
+    // Подсчет ошибок: на основе количества уникальных ошибок в mistakes
+    const incorrectAnswers = mistakes.size;
+    const totalWords = shuffledWords.length;
+    correctAnswers = totalWords - incorrectAnswers; // Правильные ответы = общее количество слов - ошибки
     scoreDisplay.textContent = {
-        ru: `Правильно: ${correctAnswers}, Ошибок: ${mistakes.size}`,
-        ge: `სწორი: ${correctAnswers}, შეცდომები: ${mistakes.size}`,
-        en: `Correct: ${correctAnswers}, Mistakes: ${mistakes.size}`
+        ru: `Правильно: ${correctAnswers}, Ошибок: ${incorrectAnswers}`,
+        ge: `სწორი: ${correctAnswers}, შეცდომები: ${incorrectAnswers}`,
+        en: `Correct: ${correctAnswers}, Mistakes: ${incorrectAnswers}`
     }[currentLang];
     mistakesTableBody.innerHTML = "";
     const mistakeWords = words.filter(word => mistakes.has(word.japanese));
@@ -290,6 +371,8 @@ restartBtn.addEventListener("click", () => {
     mistakes.clear();
     selectedOption = null;
     isIncorrectSelected = false;
+    currentOptions = []; // Очищаем варианты ответа
+    initialLang = currentLang;
     updateLanguageButtons();
     updateButtonText();
     updateTitle();

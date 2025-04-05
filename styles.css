@@ -38,6 +38,27 @@ h1 {
     font-size: 1.8em;
 }
 
+#translation-text {
+    color: #34495E;
+    font-size: 1.2em;
+    font-weight: 400; /* Совпадает с transcription */
+    margin-bottom: 10px;
+}
+
+#question-word {
+    color: #2F5069;
+    font-size: 1.5em;
+    font-weight: 600;
+    margin-bottom: 10px;
+}
+
+#transcription {
+    color: #34495E;
+    font-size: 1.2em;
+    font-weight: 400;
+    margin-bottom: 10px;
+}
+
 /* Кнопки языков */
 .lang-btn {
     background: linear-gradient(45deg, #a1a1a1, #474747);
@@ -116,6 +137,62 @@ h1 {
         width: 100%;
         margin-bottom: 12px;
     }
+}
+
+/* Переключатель режимов */
+.mode-selector {
+    margin-bottom: 20px;
+}
+
+.switch {
+    position: relative;
+    display: inline-block;
+    width: 60px;
+    height: 34px;
+}
+
+.switch input {
+    opacity: 0;
+    width: 0;
+    height: 0;
+}
+
+.slider {
+    position: absolute;
+    cursor: pointer;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: #ccc;
+    transition: 0.4s;
+    border-radius: 34px;
+}
+
+.slider:before {
+    position: absolute;
+    content: "";
+    height: 26px;
+    width: 26px;
+    left: 4px;
+    bottom: 4px;
+    background-color: white;
+    transition: 0.4s;
+    border-radius: 50%;
+}
+
+input:checked + .slider {
+    background: linear-gradient(45deg, #2F5069, #34495E);
+}
+
+input:checked + .slider:before {
+    transform: translateX(26px);
+}
+
+.mode-selector span {
+    font-size: 1em;
+    color: #34495E;
+    font-weight: 500;
 }
 
 /* Форма и опции */
@@ -212,29 +289,19 @@ h1 {
 #mistakes-table td {
     padding: 12px;
     text-align: center;
-    border-bottom: 2px solid #2F5069;
-    /* Разрешаем перенос текста и разбиение слов */
+    border-bottom: 1px solid #2F5069;
     white-space: normal;
     word-break: break-word;
 }
+
 #mistakes-table td {
-    min-width: 150px;
+    min-width: 100px;
 }
 
 #mistakes-table th {
     background: linear-gradient(45deg, #2F5069, #34495E);
     color: #FFFFFF;
     font-weight: 600;
-}
-
-#mistakes-table td.correct {
-    color: #0B6630;
-    font-weight: 500;
-}
-
-#mistakes-table td.incorrect {
-    color: #8E280F;
-    font-weight: 500;
 }
 
 /* Адаптивность для мобильных устройств */
